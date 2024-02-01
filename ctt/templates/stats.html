@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load custom_filters %}
+
+{% block head %}
+{% endblock %}
+
+
+{% block content %}
+<div class="container m-auto w-768">
+    <canvas id="BlitzElo"></canvas>
+    <hr class="my-4">
+    <canvas id="WeeklyTime"></canvas>
+    <hr class="my-4">
+    <canvas id="CtStdPerf"></canvas>
+    <hr class="my-4">
+    <canvas id="ctAmount"></canvas>
+</div>
+
+
+<script>
+  var BlitzEloCtx = document.getElementById("BlitzElo").getContext('2d');
+  var data = {{ BlitzElo | safe }}
+  var BlitzEloChart = new Chart(BlitzEloCtx, data);
+  
+  var WeeklyTimeCtx = document.getElementById("WeeklyTime").getContext('2d');
+  var data = {{ WeeklyTime | safe }}
+  var WeeklyTimeChart = new Chart(WeeklyTimeCtx, data);
+
+  var CtStdPerfCtx = document.getElementById("CtStdPerf").getContext('2d');
+  var data = {{ CtStdPerf | safe }}
+  var CtStdPerfChart = new Chart(CtStdPerfCtx, data);
+
+  var ctAmountCtx = document.getElementById("ctAmount").getContext('2d');
+  var data = {{ ctAmount | safe }}
+  var ctAmountChart = new Chart(ctAmountCtx, data);
+</script>
+
+
+
+{% endblock %}

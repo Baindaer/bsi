@@ -1,0 +1,37 @@
+.w-500 {
+    max-width: 500px;
+    padding: 1rem;
+  }
+
+.w-768 {
+    max-width: 768px;
+  }
+
+.bsi-switch-center {
+  display: flex;
+  align-items: center;
+}
+
+.nav-item .menu-name {
+  display: none;
+}
+
+.training-list {
+  padding-top: 20px;
+}
+
+/* Estilos para escritorio (ancho de pantalla mayor a 768px) */
+@media (min-width: 769px) {
+
+  .nav-item .menu-name {
+    display: inline;
+  }
+}
+
+/* Estilos para móvil (ancho de pantalla igual o menor a 768px) */
+@media (max-width: 768px) {
+
+  .nav-item .menu-name {
+    display: none;
+  }
+}

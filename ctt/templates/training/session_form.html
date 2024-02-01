@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block head %}
+{% endblock %}
+
+{% block content %}
+  <div class="container">
+
+      
+      <form method="post" class="form m-auto w-500">
+          
+        <h4 class="mb-3">Session</h4>
+        {% csrf_token %}
+
+        <div class="row g-3">
+
+            <div class="col-12">
+              <label class="form-label" for="{{ form.session_type.id_for_label }}">Session Type:</label>
+              {{ form.session_type }}
+            </div>
+    
+            <div class="col-12">
+                <label class="form-label" for="{{ form.theme.id_for_label }}">Theme:</label>
+                {{ form.theme }}
+            </div>
+    
+        
+            
+            <div class="col-12">
+                <label class="form-label" for="{{ form.notes.id_for_label }}">Notes:</label>
+                {{ form.notes }}
+            </div>
+    
+            <div class="col-sm-6">
+              <label class="form-label" for="{{ form.duration.id_for_label }}">Duration:</label>
+              {{ form.duration }}
+            </div>
+            
+            <div class="col-sm-6">
+                <label class="form-label" for="{{ form.date.id_for_label }}">Date:</label>
+                {{ form.date }}
+            </div>
+        </div>
+
+        <hr class="my-4">
+        
+        <button type="submit" class="w-100 btn btn-primary btn-lg">Confirm</button>
+        
+      </form>
+
+      <script src="{% static 'ctt/js/training.js' %}"></script>
+  </div>
+{% endblock %}

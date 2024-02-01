@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block head %}
+{% endblock %}
+
+{% block content %}
+  <div class="container">
+
+      
+      <form method="post" class="form m-auto w-500">
+          
+        <h4 class="mb-3">Games</h4>
+        {% csrf_token %}
+
+        <div class="row g-3">
+
+            <div class="col-12">
+              <label class="form-label" for="{{ form.rithm.id_for_label }}">Rithm:</label>
+              {{ form.rithm }}
+            </div>
+    
+            <div class="col-sm-6">
+                <label class="form-label" for="{{ form.score.id_for_label }}">Score:</label>
+                {{ form.score }}
+            </div>
+    
+            <div class="col-sm-6">
+                <label class="form-label" for="{{ form.games.id_for_label }}">Games:</label>
+                {{ form.games }}
+            </div>
+            
+            <div class="col-sm-6">
+                <label class="form-label" for="{{ form.elo.id_for_label }}">Elo:</label>
+                {{ form.elo }}
+            </div>
+
+            <div class="col-sm-6">
+                <label class="form-label" for="{{ form.plataform.id_for_label }}">Plataform:</label>
+                {{ form.plataform }}
+            </div>
+
+            <div class="col-12">
+                <label class="form-label" for="{{ form.link.id_for_label }}">Link:</label>
+                {{ form.link }}
+            </div>
+    
+            <div class="col-sm-6">
+              <label class="form-label" for="{{ form.duration.id_for_label }}">Duration:</label>
+              {{ form.duration }}
+            </div>
+            
+            <div class="col-sm-6">
+                <label class="form-label" for="{{ form.date.id_for_label }}">Date:</label>
+                {{ form.date }}
+            </div>
+        </div>
+
+        <hr class="my-4">
+        
+        <button type="submit" class="w-100 btn btn-primary btn-lg">Confirm</button>
+        
+      </form>
+
+      <script src="{% static 'ctt/js/game.js' %}"></script>
+      <script src="{% static 'ctt/js/training.js' %}"></script>
+  </div>
+{% endblock %}

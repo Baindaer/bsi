@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block head %}
+{% endblock %}
+
+{% block content %}
+  <div class="container">
+
+      
+      <form method="post" class="form m-auto w-500">
+          
+        <h4 class="mb-3">Tactic Workout</h4>
+        {% csrf_token %}
+
+        <div class="row g-3">
+
+            <div class="col-12">
+              <label class="form-label" for="{{ form.training_set.id_for_label }}">Training Set:</label>
+              {{ form.training_set }}
+            </div>
+    
+            <div class="col-sm-6">
+                <label class="form-label" for="{{ form.score.id_for_label }}">Score:</label>
+                {{ form.score }}
+            </div>
+    
+            <div class="col-sm-6">
+                <label class="form-label" for="{{ form.exercises.id_for_label }}">Total:</label>
+                {{ form.exercises }}
+            </div>
+            
+            
+            <div class="col-12">
+                <label class="form-label" for="{{ form.performance.id_for_label }}">Performance:</label>
+                {{ form.performance }}
+            </div>
+    
+            <div class="col-sm-6">
+              <label class="form-label" for="{{ form.duration.id_for_label }}">Duration:</label>
+              {{ form.duration }}
+            </div>
+            
+            <div class="col-sm-6">
+                <label class="form-label" for="{{ form.date.id_for_label }}">Date:</label>
+                {{ form.date }}
+            </div>
+        </div>
+
+        <hr class="my-4">
+        
+        <button type="submit" class="w-100 btn btn-primary btn-lg">Confirm</button>
+
+      </form>
+
+      <script src="{% static 'ctt/js/tactic.js' %}"></script>
+      <script src="{% static 'ctt/js/training.js' %}"></script>
+  </div>
+{% endblock %}

@@ -4,17 +4,27 @@
 <!doctype html>
 <html lang="en" data-bs-theme="auto">
   <head>
-    <script src="{% static 'cct/js/color-modes.js' %}"></script>
+    <script src="{% static 'ctt/js/color-modes.js' %}"></script>
 
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+    <meta name="description" content="Chess Training Tracking">
     <meta name="author" content="Baindaer Software Innovate">
     <meta name="generator" content="Baindaer">
+    <title>Baindaer Chess Training Track</title>
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@docsearch/css@3">
 
     <link rel="stylesheet" href="{% static 'lib/bootstrap/css/bootstrap.min.css' %}">
+
+    <link rel="stylesheet" href="{% static 'lib/fontawesome/css/fontawesome.css' %}">
+    <link rel="stylesheet" href="{% static 'lib/fontawesome/css/brands.css' %}">
+    <link rel="stylesheet" href="{% static 'lib/fontawesome/css/solid.css' %}">
+
+    <link rel="stylesheet" href="{% static 'ctt/css/base.css' %}">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     {% block head %}{% endblock %}
 
@@ -98,7 +108,7 @@
     </style>
 
   </head>
-  <body class="d-flex align-items-center py-4 bg-body-tertiary">
+  <body class="bg-body-tertiary">
     <svg xmlns="http://www.w3.org/2000/svg" class="d-none">
       <symbol id="check2" viewBox="0 0 16 16">
         <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"/>
@@ -150,14 +160,74 @@
       </ul>
     </div>
 
-    {% block content %}
-    
-    {% endblock %}
+    <header class="d-flex justify-content-center py-3">
+      <ul class="nav nav-pills">
+        <li class="nav-item">
+          <a href="{% url 'home' %}" class="nav-link {% if request.path == '/' %}active{% endif %}" aria-current="page">
+            <i class="fa-solid fa-house"></i>
+            <span class="menu-name">Home</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="{% url 'training' %}" class="nav-link {% if request.path == '/training/' %}active{% endif %}">
+            <i class="fa-solid fa-chess-board"></i>
+            <span class="menu-name">Training</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="{% url 'stats' %}" class="nav-link">
+            <i class="fa-solid fa-chart-area"></i>
+            <span class="menu-name">Stats</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="#" class="nav-link">
+            <i class="fa-solid fa-gear"></i>
+            <span class="menu-name">Settings</span>
+          </a>
+        </li>
+
+        {% if user.is_authenticated %}
+        <form method="post" action="{% url 'logout' %}">
+            {% csrf_token %}
+            <li class="nav-item">
+              <button type="submit" href="#" class="nav-link">
+                <i class="fa-solid fa-right-from-bracket"></i>
+              </button>
+            </li>
+        </form>
+        {% else %}
+        <li class="nav-item">
+          <a href="{% url 'login' %}" class="nav-link">
+            <i class="fa-solid fa-right-to-bracket"></i>
+          </a>
+        </li>
+        {% endif %}
+
+      </ul>
+    </header>
+    <div class="container">
+      {% for message in messages %}
+      <div class="alert {{ message.tags }} alert-dismissible fade show" role="alert" >
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    {% endfor %}
+
+      {% block content %}
+      
+      {% endblock %}
+    </div>
+
+
 
     
 
     <script src="{% static 'lib/jquery/jquery-3.7.1.min.js' %}"></script>
     <script src="{% static 'lib/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'ctt/js/base.js' %}"></script>
+    
+
 
     </body>
 </html>

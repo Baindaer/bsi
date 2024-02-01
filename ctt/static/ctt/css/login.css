@@ -5,6 +5,7 @@ body {
 
 .form-signin {
   max-width: 330px;
+  min-width: 300px;
   padding: 1rem;
 }
 
