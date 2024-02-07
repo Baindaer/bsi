@@ -55,10 +55,11 @@
 
       {% for training in training_data.trainings %}
       {% if training|get_type:"PuzzleRun" %}
-        <li class="list-group-item list-group-item-action list-group-item-primary">
+        <li class="list-group-item list-group-item-action list-group-item-primary" onclick="toggleDeleteButton(this)">
           <div class="d-flex w-100 justify-content-between">
             <h5 class="mb-1">{{ training.puzzle }} Run</h5>
             <small>{{ training.duration }} min</small>
+            <a href="#" class="btn btn-danger btn-sm delete-training btn-close btn-close" data-id="{{ training.id }}" style="display: none;"></a>
           </div>
           {% if training.puzzle == 'Puzzle Storm' or training.puzzle == 'Puzzle Racer' %}
           <p class="mb-1">Score: {{ training.score_1 }} | {{ training.score_2 }} | {{ training.score_3 }}</p>
@@ -68,34 +69,39 @@
         {% endif %}
 
         {% elif training|get_type:"Tactic" %}
-        <li class="list-group-item list-group-item-action list-group-item-success">
+        <li class="list-group-item list-group-item-action list-group-item-success" onclick="toggleDeleteButton(this)">
           <div class="d-flex w-100 justify-content-between">
 
             <h5 class="mb-1">{{ training.training_set }} Tactic</h5>
             <small>{{ training.duration }} min</small>
+            <a href="#" class="btn btn-danger btn-sm delete-training btn-close" data-id="{{ training.id }}" style="display: none;"></a>
           </div>
           <p class="mb-1">Score: {{ training.score }} / {{ training.exercises }}</p>
           <small>Performance: {{ training.performance }}</small>
         </li>
 
         {% elif training|get_type:"Game" %}
-        <li class="list-group-item list-group-item-action list-group-item-warning">
+        <li class="list-group-item list-group-item-action list-group-item-warning" onclick="toggleDeleteButton(this)">
           <div class="d-flex w-100 justify-content-between">
             <h5 class="mb-1">{{ training.rithm }} {% if training.otb %} OTB {% else %} {% endif %} Games</h5>
-            {% if training.link %}
-            <p class="mb-1">Check Game: <a href="{{ training.link }}">Link</a></p>
-            {% endif %}
             <small>{{ training.duration }} min</small>
+            <a href="#" class="btn btn-danger btn-sm delete-training btn-close" data-id="{{ training.id }}" style="display: none;"></a>
           </div>
           <p class="mb-1">Score: {{ training.score }} / {{ training.games }}</p>
-          <small>Elo: {{ training.elo }}</small>
+          <small>Elo: {{ training.elo }}
+            {% if training.link %}
+            . Check Game: <a href="{{ training.link }}">Link</a>
+            {% endif %}
+
+          </small>
         </li>
 
         {% elif training|get_type:"Session" %}
-        <li class="list-group-item list-group-item-action list-group-item-info">
+        <li class="list-group-item list-group-item-action list-group-item-info" onclick="toggleDeleteButton(this)">
           <div class="d-flex w-100 justify-content-between">
             <h5 class="mb-1">{{ training.session_type }}</h5>
             <small>{{ training.duration }} min</small>
+            <a href="#" class="btn btn-danger btn-sm delete-training btn-close" data-id="{{ training.id }}" style="display: none;"></a>
           </div>
           <p class="mb-1">Theme: {{ training.theme }}</p>
           <small>{{ training.notes }}</small>
@@ -112,3 +118,10 @@
 </div>
 
 {% endblock %}
+
+{% block scripts %}
+
+<script src="{% static 'ctt/js/training.js' %}"></script>
+      
+{% endblock %}
+

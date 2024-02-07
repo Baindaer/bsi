@@ -16,7 +16,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from ctt.views import login_view, home_view, training_view, training_dashboard, puzzle_run_form, tactic_form,game_form,session_form,stats_view
+from ctt.views import login_view, home_view, training_view, training_dashboard 
+from ctt.views import puzzle_run_form, tactic_form,game_form,session_form,stats_view, delete_training
 from django.contrib.auth.views import LogoutView
 
 urlpatterns = [
@@ -30,5 +31,6 @@ urlpatterns = [
     path('training/tactic/', tactic_form, name='tactic_form'),
     path('training/game/', game_form, name='game_form'),
     path('training/session/', session_form, name='session_form'),
+    path('delete_training/', delete_training, name='delete_training'),
     path('stats/',stats_view, name='stats'),
 ]

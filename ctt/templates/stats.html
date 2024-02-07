@@ -8,6 +8,8 @@
 
 {% block content %}
 <div class="container m-auto w-768">
+    <canvas id="RapidElo"></canvas>
+    <hr class="my-4">
     <canvas id="BlitzElo"></canvas>
     <hr class="my-4">
     <canvas id="WeeklyTime"></canvas>
@@ -19,6 +21,10 @@
 
 
 <script>
+  var RapidEloCtx = document.getElementById("RapidElo").getContext('2d');
+  var data = {{ RapidElo | safe }}
+  var RapidEloChart = new Chart(RapidEloCtx, data);
+
   var BlitzEloCtx = document.getElementById("BlitzElo").getContext('2d');
   var data = {{ BlitzElo | safe }}
   var BlitzEloChart = new Chart(BlitzEloCtx, data);

@@ -18,6 +18,8 @@ document.getElementById("id_games").addEventListener("input", updateDuration);
         duration = gamesValue * 6;
       } else if (rithmValue === 'Rapid') {
         duration = gamesValue * 20;
+      } else if (rithmValue === 'Bullet') {
+        duration = gamesValue * 2;
       } else if (rithmValue === 'Classic') {
         duration = gamesValue * 60;
       }

@@ -40,6 +40,7 @@ class ChartJs():
                     }
                 },
             }
+    
 
     class BarGraph(BaseChart):
 
@@ -57,7 +58,7 @@ class ChartJs():
         class options:
             scales = {
                 'y': {
-                    'beginAtZero': False,
+                    'beginAtZero': True,
                 },
                 'x': {
                     'ticks': {

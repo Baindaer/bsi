@@ -1,17 +1,15 @@
-from django.http import HttpResponse
-from django.shortcuts import render, redirect
-from django.urls import reverse
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login
 from django.contrib import messages
-from django.db.models import Sum
-from django.contrib.auth.views import LoginView
-
-from django.urls import reverse_lazy
+from django.db.models import Sum, Avg
 from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
 
 from itertools import groupby
 from operator import attrgetter, itemgetter
-from django.db.models import Avg
+
+from .forms import PuzzleRunForm, TacticForm, GameForm, SessionForm
+from .models import PuzzleRun, Tactic, Game, Session
 
 from .chart import ChartJs
 from .static.lib.pychartjs import Color
@@ -71,11 +69,6 @@ def training_view(request):
 
 
 
-from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
-from .forms import PuzzleRunForm, TacticForm, GameForm, SessionForm
-from .models import PuzzleRun, Tactic, Game, Session
-
 @login_required
 def training_dashboard(request):
     return render(request, 'training/dashboard.html')
@@ -83,6 +76,59 @@ def training_dashboard(request):
 @login_required
 def stats_view(request):
 
+    # def elo():
+    #     blitz_data = Game.objects.filter(rithm='Blitz', plataform='Chess.com').values('date').annotate(avg_elo=Avg('elo'))
+    #     rapid_data = Game.objects.filter(rithm='Rapid', plataform='Chess.com').values('date').annotate(avg_elo=Avg('elo'))
+
+    #     # Obtener todas las fechas únicas de ambas series
+    #     all_dates = set(entry['date'] for entry in blitz_data) | set(entry['date'] for entry in rapid_data)
+
+    #     # Crear diccionarios para mapear fechas a valores de elo
+    #     blitz_elo_values = {entry['date']: entry['avg_elo'] for entry in blitz_data}
+    #     rapid_elo_values = {entry['date']: entry['avg_elo'] for entry in rapid_data}
+
+    #     # Rellenar los valores de elo para las fechas que faltan
+    #     all_blitz_elo_values = [blitz_elo_values.get(date, None) for date in all_dates]
+    #     all_rapid_elo_values = [rapid_elo_values.get(date, None) for date in all_dates]
+
+    #     labels = [date.strftime('%Y-%m-%d') for date in all_dates]
+
+    #     bnr_chart = ChartJs.LineGraph()
+    #     bnr_chart.labels.grouped = labels
+        
+    #     # Declarar Apples y Oranges como clases
+    #     class Blitz(ChartJs.LineGraph.data):
+    #         data = all_blitz_elo_values
+    #         label = 'Elo Blitz'
+
+    #     class Rapid(ChartJs.LineGraph.data):
+    #         data = all_rapid_elo_values
+    #         label = 'Elo Rapid'
+
+    #     # Asignar Apples y Oranges al atributo data
+    #     bnr_chart.data.Blitz = Blitz
+    #     bnr_chart.data.Rapid = Rapid
+    #     bnr_chart.options.scales['x']['ticks']['maxTicksLimit'] = 3
+
+    #     elo = bnr_chart.get()
+    #     return elo
+
+    def rapid_elo():
+        data = Game.objects.filter(rithm='Rapid', plataform='Chess.com').values('date').annotate(avg_elo=Avg('elo'))
+
+        labels = [entry['date'].strftime('%Y-%m-%d') for entry in data]
+        elo_values = [entry['avg_elo'] for entry in data]
+
+        be_chart = ChartJs.LineGraph()
+        be_chart.labels.grouped = labels
+        be_chart.data.data = elo_values
+        be_chart.data.label = 'Elo Rapid'
+        be_chart.data.borderColor = ChartJs.linear_gradient('RapidEloCtx', Color.Blue, Color.Magenta)
+        be_chart.options.scales['x']['ticks']['maxTicksLimit'] = 3
+
+        rapidElo = be_chart.get()
+        return rapidElo
+    
     def blitz_elo():
         data = Game.objects.filter(rithm='Blitz', plataform='Chess.com').values('date').annotate(avg_elo=Avg('elo'))
 
@@ -161,19 +207,21 @@ def stats_view(request):
         ca_chart.data.data = total_exercises
         ca_chart.data.label = 'CT Total Exercises'
         ca_chart.data.backgroundColor = ChartJs.linear_gradient('CtStdPerfCtx', Color.Green, Color.Magenta)
-        ca_chart.options.scales['x']['ticks']['maxTicksLimit'] = 3
+        ca_chart.options.scales['x']['ticks']['maxTicksLimit'] = 5
 
         ctAmount = ca_chart.get()
         return ctAmount
 
         
     
+    RapidElo = rapid_elo()
     BlitzElo = blitz_elo()
     WeeklyTime = weekly_time()
     CtStdPerf = ct_std_perf()
     ctAmount = ct_amount()
 
     context = {
+        "RapidElo": RapidElo,
         "BlitzElo": BlitzElo,
         "WeeklyTime": WeeklyTime,
         "CtStdPerf": CtStdPerf,
@@ -235,4 +283,27 @@ def session_form(request):
         form = SessionForm()
     return render(request, 'training/session_form.html', {'form': form})
 
-    
+
+
+
+
+
+
+
+
+def delete_training(request):
+    training_id = request.GET.get('id')
+    training_type = request.GET.get('type')
+
+    # Lógica para eliminar el entrenamiento según el tipo
+    if training_type == 'list-group-item-primary':
+        PuzzleRun.objects.filter(id=training_id).delete()
+    elif training_type == 'list-group-item-success':
+        Tactic.objects.filter(id=training_id).delete()
+    elif training_type == 'list-group-item-warning':
+        Game.objects.filter(id=training_id).delete()
+    elif training_type == 'list-group-item-info':
+        Session.objects.filter(id=training_id).delete()
+
+    # Redirigir a la página de entrenamientos después de la eliminación
+    return redirect('training')

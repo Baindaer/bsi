@@ -59,6 +59,7 @@ class TacticForm(forms.ModelForm):
 class GameForm(forms.ModelForm):
 
     RITHM_CHOICES = [
+        ('Bullet', 'Bullet'),
         ('Blitz', 'Blitz'),
         ('Rapid', 'Rapid'),
         ('Classic', 'Classic'),
@@ -91,6 +92,7 @@ class GameForm(forms.ModelForm):
         self.initial['date'] = date.today()
         self.initial['plataform'] = 'Chess.com'
         self.initial['duration'] = 6
+        self.initial['rithm'] = 'Blitz'
     
 
 class SessionForm(forms.ModelForm):
