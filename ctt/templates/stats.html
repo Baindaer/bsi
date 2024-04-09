@@ -7,16 +7,59 @@
 
 
 {% block content %}
-<div class="container m-auto w-768">
-    <canvas id="RapidElo"></canvas>
-    <hr class="my-4">
-    <canvas id="BlitzElo"></canvas>
-    <hr class="my-4">
-    <canvas id="WeeklyTime"></canvas>
-    <hr class="my-4">
-    <canvas id="CtStdPerf"></canvas>
-    <hr class="my-4">
-    <canvas id="ctAmount"></canvas>
+<div class="container m-auto w-100">
+  <div class="row">
+    <div class="col d-flex justify-content-center align-items-center">
+      <canvas id="WeeklyTime"></canvas>
+    </div>
+
+    <div class="col d-flex justify-content-center align-items-center">
+      <canvas id="RapidElo"></canvas>
+    </div>
+    <div class="col d-flex justify-content-center align-items-center">
+      <canvas id="BlitzElo"></canvas>
+    </div>
+  </div>
+  
+  <div class="row">
+    <div class="col col-md-5 d-flex justify-content-center align-items-center">
+        <canvas id="TimeDist"></canvas>
+    </div>
+    <div class="col col-md-7 d-flex justify-content-center align-items-center">
+      <canvas id="DetailedTime"></canvas>
+    </div>
+  </div>
+      
+
+  <div class="row">
+    <div class="col d-flex justify-content-center align-items-center">
+      <canvas id="ctAmount"></canvas>
+    </div>
+    <div class="col d-flex justify-content-center align-items-center">
+      <canvas id="CtStdPerf"></canvas>
+    </div>
+
+  </div>
+  <div class="row">
+    <div class="col d-flex justify-content-center align-items-center">
+      <canvas id="StormMax"></canvas>
+    </div>
+    <div class="col d-flex justify-content-center align-items-center">
+      <canvas id="StormAvg"></canvas>
+    </div>
+    
+  </div>
+  <div class="row">
+    <div class="col d-flex justify-content-center align-items-center">
+      <canvas id="RacerMax"></canvas>
+    </div>
+    <div class="col d-flex justify-content-center align-items-center">
+      <canvas id="RacerAvg"></canvas>
+    </div>
+  
+  </div>
+
+
 </div>
 
 
@@ -33,13 +76,38 @@
   var data = {{ WeeklyTime | safe }}
   var WeeklyTimeChart = new Chart(WeeklyTimeCtx, data);
 
-  var CtStdPerfCtx = document.getElementById("CtStdPerf").getContext('2d');
-  var data = {{ CtStdPerf | safe }}
-  var CtStdPerfChart = new Chart(CtStdPerfCtx, data);
-
   var ctAmountCtx = document.getElementById("ctAmount").getContext('2d');
   var data = {{ ctAmount | safe }}
   var ctAmountChart = new Chart(ctAmountCtx, data);
+
+  var CtStdPerfCtx = document.getElementById("CtStdPerf").getContext('2d');
+  var data = {{ CtStdPerf | safe }}
+  var CtStdPerfChart = new Chart(CtStdPerfCtx, data);
+  
+  var StormMaxCtx = document.getElementById("StormMax").getContext('2d');
+  var data = {{ StormMax | safe }}
+  var StormMaxChart = new Chart(StormMaxCtx, data);
+
+  var RacerMaxCtx = document.getElementById("RacerMax").getContext('2d');
+  var data = {{ RacerMax | safe }}
+  var RacerMaxChart = new Chart(RacerMaxCtx, data);
+
+  var TimeDistCtx = document.getElementById("TimeDist").getContext('2d');
+  var data = {{ TimeDist | safe }}
+  var TimeDistChart = new Chart(TimeDistCtx, data);
+
+  var DetailedTimeCtx = document.getElementById("DetailedTime").getContext('2d');
+  var data = {{ DetailedTime | safe }}
+  var DetailedTimeChart = new Chart(DetailedTimeCtx, data);
+
+  var RacerAvgCtx = document.getElementById("RacerAvg").getContext('2d');
+  var data = {{ RacerAvg | safe }}
+  var RacerAvgChart = new Chart(RacerAvgCtx, data);
+
+  var StormAvgCtx = document.getElementById("StormAvg").getContext('2d');
+  var data = {{ StormAvg | safe }}
+  var StormAvgChart = new Chart(StormAvgCtx, data);
+
 </script>
 
 

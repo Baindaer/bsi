@@ -32,7 +32,7 @@ class ChartJs():
         class options:
             scales = {
                 'y': {
-                    'beginAtZero': False,
+                    'beginAtZero': True,
                 },
                 'x': {
                     'ticks': {
@@ -68,4 +68,71 @@ class ChartJs():
                 },
             }
 
+    class DonutChart(BaseChart):
 
+        type = ChartType.Doughnut
+
+        class data:
+            data = []
+            label = ''
+            backgroundColor =  Color.Purple
+            fill = True
+
+        class labels:
+            grouped = []
+        
+        class options:
+            pass
+
+    class RadarChart(BaseChart):
+
+        type = ChartType.Radar
+
+        class data:
+            data = []
+            label = ''
+            backgroundColor =  Color.Purple
+            fill = True
+
+        class labels:
+            grouped = []
+        
+        class options:
+            pass
+
+        class pluginOptions:
+            legend = {
+                'display': False
+            }
+
+    class PolarAreaChart(BaseChart):
+
+        type = ChartType.PolarArea
+
+        class data:
+            data = []
+            label = ''
+            backgroundColor =  Color.Purple
+            fill = True
+
+        class labels:
+            grouped = []
+        
+        class options:
+            scales = {
+                'r': {
+                    'pointLabels': {
+                    'display': True,
+                    'centerPointLabels': True,
+                    'font': {
+                        'size': 12
+                        }
+                    },
+                }
+            }
+
+        class pluginOptions:
+            legend = {
+                'display': False
+            }
+              

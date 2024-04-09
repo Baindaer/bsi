@@ -9,15 +9,39 @@
 {% block content %}
 
 <div class="container m-auto w-500">
-  <div class="row">
+
+  <div class="modal fade" id="addAttemptModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">New run</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form method="post" id="addAttemptForm">
+            {% csrf_token %}
+            <div class="row g-3">
+              <div class="col-12">
+                <label class="form-label" for="{{ form.tactic.id_for_label }}">Tactic:</label>
+                {{ form.tactic }}
+              </div>
+              <div class="col-12">
+                <label class="form-label" for="{{ form.score.id_for_label }}">Score:</label>
+                {{ form.score }}
+              </div>
+            </div>
+            <hr class="my-4">
+            <button type="submit" class="btn w-100 btn-primary">Confirm</button>
+          </form>
+        </div>
+    
+      </div>
+    </div>
+  </div>
+
+  <div class="row" >
     <h4>New Training</h4>
     <div class="list-group list-group-horizontal" style="min-height: 80px;">
-      <a href="{% url 'puzzle_run_form' %}" class="list-group-item list-group-item-action text-center flex-fill training-list list-group-item-primary">
-        <div class="d-flex flex-column align-items-center">
-          <h4><i class="fa-solid fa-puzzle-piece"></i></h4>
-          <p>Puzzle</p>
-        </div>
-      </a>
       <a href="{% url 'tactic_form' %}" class="list-group-item list-group-item-action text-center flex-fill training-list list-group-item-success">
         <div class="d-flex flex-column align-items-center">
           <h4><i class="fa-solid fa-chess-knight"></i></h4>
@@ -54,30 +78,52 @@
       </li>
 
       {% for training in training_data.trainings %}
-      {% if training|get_type:"PuzzleRun" %}
-        <li class="list-group-item list-group-item-action list-group-item-primary" onclick="toggleDeleteButton(this)">
-          <div class="d-flex w-100 justify-content-between">
-            <h5 class="mb-1">{{ training.puzzle }} Run</h5>
-            <small>{{ training.duration }} min</small>
-            <a href="#" class="btn btn-danger btn-sm delete-training btn-close btn-close" data-id="{{ training.id }}" style="display: none;"></a>
-          </div>
-          {% if training.puzzle == 'Puzzle Storm' or training.puzzle == 'Puzzle Racer' %}
-          <p class="mb-1">Score: {{ training.score_1 }} | {{ training.score_2 }} | {{ training.score_3 }}</p>
-          {% elif training.puzzle == 'Daily Challenge' %}
-          <p class="mb-1">Score: {{ training.score_1 }}</p>
-        </li>
-        {% endif %}
-
-        {% elif training|get_type:"Tactic" %}
+        {% if training|get_type:"Tactic" %}
         <li class="list-group-item list-group-item-action list-group-item-success" onclick="toggleDeleteButton(this)">
           <div class="d-flex w-100 justify-content-between">
 
             <h5 class="mb-1">{{ training.training_set }} Tactic</h5>
+
             <small>{{ training.duration }} min</small>
-            <a href="#" class="btn btn-danger btn-sm delete-training btn-close" data-id="{{ training.id }}" style="display: none;"></a>
+            
+            <div class="row tactic-btn" style="display: none;">
+              <div class="col" style="padding:3px">
+                <a href="#" type="button" class="btn btn-sm add-attempt" id="addAttemptBtn" data-id="{{ training.id }}" 
+                  data-bs-toggle="modal" data-bs-target="#addAttemptModal" style="display: none; --bs-btn-padding-y: .12rem; --bs-btn-padding-x: .4rem; --bs-btn-font-size: .7rem;" >
+                  <i class="fa-solid fa-plus"></i>
+                </a>
+              </div>
+              <div class="col" style="padding:3px">
+                <a href="#" class="btn btn-sm delete-training" data-id="{{ training.id }}" data-tactic-id="{{ training.id }}" style="display: none; --bs-btn-padding-y: .12rem; --bs-btn-padding-x: .4rem; --bs-btn-font-size: .7rem;">
+                  <i class="fa-solid fa-x"></i>
+                </a>
+
+              </div>
+            </div>
+   
           </div>
-          <p class="mb-1">Score: {{ training.score }} / {{ training.exercises }}</p>
-          <small>Performance: {{ training.performance }}</small>
+          <p class="mb-1">
+            {% if training.training_set in 'Standard,Endgame,Woodpecker' %}
+              Score: {{ training.score }} / {{ training.exercises }}
+            </p>
+            <small>Performance: {{ training.performance }}</small>
+            {% endif %}
+            {% if training.training_set == 'Daily Challenge' %}
+              Score: {{ training.score }}
+            </p>
+            {% endif %}
+            {% if training.training_set in 'Puzzle Racer,Puzzle Storm' %}
+              {% if training.attempts.all %}
+                <p class="mb-1">Score: 
+                    {% for attempt in training.attempts.all %}
+                      {{ attempt.score }}
+                      {% if not forloop.last %}|{% endif %}
+                    {% endfor %}
+                </p>
+              {% endif %}
+            {% endif %}
+
+         
         </li>
 
         {% elif training|get_type:"Game" %}
@@ -85,10 +131,16 @@
           <div class="d-flex w-100 justify-content-between">
             <h5 class="mb-1">{{ training.rithm }} {% if training.otb %} OTB {% else %} {% endif %} Games</h5>
             <small>{{ training.duration }} min</small>
-            <a href="#" class="btn btn-danger btn-sm delete-training btn-close" data-id="{{ training.id }}" style="display: none;"></a>
+            <div class="row tactic-btn" style="display: none;">
+              <div class="col" style="padding:3px">
+                <a href="#" class="btn btn-sm delete-training" data-id="{{ training.id }}" style="display: none; --bs-btn-padding-y: .12rem; --bs-btn-padding-x: .4rem; --bs-btn-font-size: .7rem;">
+                  <i class="fa-solid fa-x"></i>
+                </a>
+              </div>
+            </div>
           </div>
           <p class="mb-1">Score: {{ training.score }} / {{ training.games }}</p>
-          <small>Elo: {{ training.elo }}
+          <small>{{ training.plataform }} Elo: {{ training.elo }}
             {% if training.link %}
             . Check Game: <a href="{{ training.link }}">Link</a>
             {% endif %}
@@ -101,7 +153,13 @@
           <div class="d-flex w-100 justify-content-between">
             <h5 class="mb-1">{{ training.session_type }}</h5>
             <small>{{ training.duration }} min</small>
-            <a href="#" class="btn btn-danger btn-sm delete-training btn-close" data-id="{{ training.id }}" style="display: none;"></a>
+            <div class="row tactic-btn" style="display: none;">
+              <div class="col" style="padding:3px">
+                <a href="#" class="btn btn-sm delete-training" data-id="{{ training.id }}" style="display: none; --bs-btn-padding-y: .12rem; --bs-btn-padding-x: .4rem; --bs-btn-font-size: .7rem;">
+                  <i class="fa-solid fa-x"></i>
+                </a>
+              </div>
+            </div>
           </div>
           <p class="mb-1">Theme: {{ training.theme }}</p>
           <small>{{ training.notes }}</small>

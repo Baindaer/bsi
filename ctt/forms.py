@@ -1,34 +1,7 @@
 from django import forms
-from .models import PuzzleRun, Tactic, Game, Session
+from .models import Tactic, Game, Session, TacticAttempt
 from datetime import date
 
-class PuzzleRunForm(forms.ModelForm):
-
-    PUZZLE_CHOICES = [
-        ('Puzzle Storm', 'Puzzle Storm'),
-        ('Puzzle Racer', 'Puzzle Racer'),
-        ('Aimchess Routine', 'Aimchess Routine'),
-        ('Daily Challenge', 'Daily Challenge'),
-        ('Focus Workout', 'Focus Workout'),
-    ]
-
-    puzzle = forms.ChoiceField(choices=PUZZLE_CHOICES, widget=forms.Select(attrs={'class': 'form-control', 'placeholder': ''}))
-    date = forms.DateField(widget=forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}))
-    score_1 = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control', 'placeholder': ''}), required=False)
-    score_2 = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control', 'placeholder': ''}), required=False)
-    score_3 = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control', 'placeholder': ''}), required=False)
-    duration = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
-
-    class Meta:
-        model = PuzzleRun
-        fields = ['score_1', 'score_2', 'score_3', 'puzzle', 'date', 'duration']
-      
-
-    def __init__(self, *args, **kwargs):
-        super(PuzzleRunForm, self).__init__(*args, **kwargs)
-        # Establecer la fecha actual como valor predeterminado para el campo date
-        self.initial['date'] = date.today()
-        self.initial['duration'] = 9
 
 class TacticForm(forms.ModelForm):
 
@@ -36,13 +9,18 @@ class TacticForm(forms.ModelForm):
         ('Standard', 'Standard'),
         ('Endgame', 'Endgame'),
         ('Woodpecker', 'Woodpecker'),
+        ('Puzzle Storm', 'Puzzle Storm'),
+        ('Puzzle Racer', 'Puzzle Racer'),
+        ('Aimchess Routine', 'Aimchess Routine'),
+        ('Daily Challenge', 'Daily Challenge'),
+        ('Focus Workout', 'Focus Workout'),
     ]
 
-    score = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control', 'placeholder': ''}))
-    exercises = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control', 'placeholder': ''}))
-    performance = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control', 'placeholder': ''}))
+    score = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control', 'placeholder': ''}), required=False)
+    exercises = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control', 'placeholder': ''}), required=False)
+    performance = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control', 'placeholder': ''}), required=False)
     training_set = forms.ChoiceField(choices=SET_CHOICES, widget=forms.Select(attrs={'class': 'form-control', 'placeholder': ''}))
-    duration = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
+    duration = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
     date = forms.DateField(widget=forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}))
 
 
@@ -55,6 +33,20 @@ class TacticForm(forms.ModelForm):
         # Establecer la fecha actual como valor predeterminado para el campo date
         self.initial['date'] = date.today()
         self.initial['duration'] = 2
+
+class TacticAttemptForm(forms.ModelForm):
+
+    score = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control', 'placeholder': ''}))
+    tactic = forms.ModelChoiceField(queryset=Tactic.objects.all())
+
+    class Meta:
+        model = TacticAttempt
+        fields = ['score', 'tactic']
+
+    def __init__(self, *args, **kwargs):
+        super(TacticAttemptForm, self).__init__(*args, **kwargs)
+
+        self.fields['tactic'].widget.attrs['class'] = 'form-control'
 
 class GameForm(forms.ModelForm):
 
